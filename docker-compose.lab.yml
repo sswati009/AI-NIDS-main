@@ -1,0 +1,54 @@
+services:
+  nids-client:
+    container_name: ai-nids-lab-client
+    image: ai-nids-lab-client:1.0.0
+    platform: linux/amd64
+    build:
+      context: ./docker/lab-client
+      dockerfile: Dockerfile
+    pull_policy: build
+    init: true
+    command: ["sh", "-c", "sleep infinity"]
+    restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=16m
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_RAW
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - lab-captures:/captures
+    networks:
+      lab:
+        ipv4_address: 172.30.50.10
+
+  juice-shop:
+    container_name: ai-nids-lab-juice-shop
+    image: bkimminich/juice-shop:20.2.0@sha256:73c53fbf442e8337b3ea3d98c7e8550308854701ebdfce4cc39768f36b75430e
+    platform: linux/amd64
+    restart: unless-stopped
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      lab:
+        ipv4_address: 172.30.50.20
+
+networks:
+  lab:
+    name: ai-nids-lab-isolated
+    driver: bridge
+    internal: true
+    enable_ipv6: false
+    ipam:
+      config:
+        - subnet: 172.30.50.0/24
+          gateway: 172.30.50.1
+
+volumes:
+  lab-captures:
+    name: ai-nids-lab-captures

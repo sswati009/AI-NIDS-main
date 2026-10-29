@@ -1,0 +1,27 @@
+.git
+.github
+.vscode
+__pycache__
+*.pyc
+*.pyo
+*.log
+
+# Training and raw capture data are not needed to run the dashboard.
+data/processed
+data/live
+data/final/final_dataset.csv
+data/final/multiclass
+data/final/multiclass_training
+data/final/splits
+debug_pcaps
+migration-backups
+
+# Keep only runtime model artifacts and the fitted scaler.
+models/*_cpu.pth
+data/final/features/X_*.npy
+data/final/features/y_*.npy
+data/final/features/binary_test_probabilities.npy
+
+tests
+*.md
+docker-compose*.yml
